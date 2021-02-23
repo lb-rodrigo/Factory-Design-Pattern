@@ -30,12 +30,15 @@ class Factory {
 				}
 				else {
 					char operation = *input[i];
-					char operationPow = *input[i+1];		
+					//char operationPow = *input[i+1];		
 					if (strlen(input[i]) == 2) {
-						value = *input[i];
-						cout << value;
+						expression.push_back(value);
+						value = input[i];
+						expression.push_back(value);
+						cout << value << endl;
+						value = "";
                                		} 
-					else if (operation == '+' || operation == '-' || operation == '/' || operation == '*') {
+					else if(operation == '+' || operation == '-' || operation == '/' || operation == '*') {
                                         	expression.push_back(value);
                                         	value = operation;
 						cout << value;
@@ -54,7 +57,7 @@ class Factory {
 
 		Base* parse(char** input, int length) {
 			vector<string> expression = ParseHelper(input, length);
-		
+			Base* product = nullptr;
 			for(int i = 0; i < expression.size(); ++i) {
 				cout << expression.at(i) << " ";
 			}
@@ -63,41 +66,107 @@ class Factory {
 			for(int i = 0; i < expression.size(); ++i) {
 				if(expression.at(i) == "+") {
 					double val1 = stod(expression.at(i-1));
+					if(product != nullptr){
+					val1 = product->evaluate();
 					double val2 = stod(expression.at(i+1));
 					Base* op1 = new Op(val1);
 					Base* op2 = new Op(val2);
-					return new Add(op1, op2);
+					product = new Add(op1, op2);
+					}
+					else {
+					double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Add(op1, op2);
+					}
 				}
 				else if(expression.at(i) == "-") {
-                                        double val1 = stod(expression.at(i-1));
+ /*                                       double val1 = stod(expression.at(i-1));
                                         double val2 = stod(expression.at(i+1));
                                         Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
-                                        return new Sub(op1, op2);
+                                        product = new Sub(op1, op2); */
+					double val1 = stod(expression.at(i-1));
+                                        if(product != nullptr){
+                                        val1 = product->evaluate();
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Sub(op1, op2);
+                                        }
+                                        else {
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Sub(op1, op2);
+                                        }
                                 }
 				else if(expression.at(i) == "/") {
-                                        double val1 = stod(expression.at(i-1));
+/*                                        double val1 = stod(expression.at(i-1));
                                         double val2 = stod(expression.at(i+1));
                                         Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
-                                        return new Div(op1, op2);
+                                        product = new Div(op1, op2); */
+					double val1 = stod(expression.at(i-1));
+                                        if(product != nullptr){
+                                        val1 = product->evaluate();
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Div(op1, op2);
+                                        }
+                                        else {
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Div(op1, op2);
+                                        }
                                 }
 				else if(expression.at(i) == "**") {
-                                      	double val1 = stod(expression.at(i-1));
+/*                                      	double val1 = stod(expression.at(i-1));
                                         double val2 = stod(expression.at(i+1));
                                  	Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
-					return new Pow(op1, op2);
+					product = new Pow(op1, op2); */
+					double val1 = stod(expression.at(i-1));
+                                        if(product != nullptr){
+                                        val1 = product->evaluate();
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Pow(op1, op2);
+                                        }
+                                        else {
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Pow(op1, op2);
+                                        }
 				}
 				else if(expression.at(i) == "*") {
-                       	                double val1 = stod(expression.at(i-1));
+/*                       	                double val1 = stod(expression.at(i-1));
                                	        double val2 = stod(expression.at(i+1));
                                         Base* op1 = new Op(val1);
                                   	Base* op2 = new Op(val2);
-                                        return new Mult(op1, op2);
+                                        product = new Mult(op1, op2); */
+					double val1 = stod(expression.at(i-1));
+                                        if(product != nullptr){
+                                        val1 = product->evaluate();
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Mult(op1, op2);
+                                        }
+                                        else {
+                                        double val2 = stod(expression.at(i+1));
+                                        Base* op1 = new Op(val1);
+                                        Base* op2 = new Op(val2);
+                                        product = new Mult(op1, op2);
+                                        }
 				}	
 			}		
-			return nullptr;		
+			
+			return product;		
 		}
 	
 		
