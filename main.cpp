@@ -21,5 +21,9 @@ int main(int argc, char**argv) {
 	cout << result->stringify() << " = " << result->evaluate() << endl;
     }
 	
+	
+//	delete[] expressionTree;
+//	delete[] result; 
+//	delete[] argv;
 	return 0;
 }

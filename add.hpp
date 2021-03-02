@@ -5,9 +5,13 @@
 
 class Add  : public Base {
     private:
-        Base* val1;
-        Base* val2;
+        Base* val1 = nullptr;
+        Base* val2 = nullptr;
     public:
+	virtual ~Add() { 
+		delete val1; 
+		delete val2;	
+	}
         Add(Base* num1, Base* num2) : Base() {
                 val1 = num1;
                 val2 = num2;
