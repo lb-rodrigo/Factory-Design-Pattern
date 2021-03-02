@@ -1,1 +1,7 @@
-a.out
+calculator
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+lib/
+test
