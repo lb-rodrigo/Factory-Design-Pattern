@@ -15,54 +15,23 @@
 using namespace std;
 
 class Factory {
-//	private:
-//	Base* product = nullptr;
-	public:
-	~Factory(){
-//	delete product;
-//	delete op1;
-//	delete op2;
-	}
-
-		void Resize(vector<string>& expression){
-		size_t k = 0;
-			for(size_t i = 0; i < expression.size(); i++){
-				if(expression.at(i) != ""){	
-				expression.at(k) = expression.at(i);
-				k++;
-				}
-			}
-			expression.resize(k);
-		}
-
-		bool check(vector<string> dirty){
-			if(dirty.size() == 0){
-//			cout << "Invalid Empty" << endl;
-			return true;
-			}
-			if(dirty.at(0) == "+" || dirty.at(0) == "-" ||  dirty.at(0) == "*" || dirty.at(0) == "**" || dirty.at(0) == "/"){
-//				cout << "Invalid Input"	<< endl;
-				return true;
-			}
-			if(dirty.at(dirty.size()-1) == "+" || dirty.at(dirty.size()-1) == "-" ||  dirty.at(dirty.size()-1) == "*" || dirty.at(dirty.size()-1) == "**" || dirty.at(dirty.size()-1) == "/"){
-//				cout << "Invalid Input" << endl;
-				return true;
-			}
-		return false;
-		}
-
+	public: 
+		~Factory() {}
 
 		vector<string> ParseHelper(char** input, int length) {
 			vector<string> expression;
 			string value = ""; 
-			for(unsigned i = 1; i < length; i++) {
+			bool first = true;
+			for (unsigned i = 1; i < length; i++) {
+				char* digit = input[i];
+ 				if(isdigit(*digit) == true) {
 
- 				if(isdigit(*input[i]) == true) {
 					value += input[i];
 				//	cout << value << " ";
 					if(i == length-1) {
 						expression.push_back(value);
 					}
+					first = false;
 				}
 				else {		
 					char operation = *input[i];
@@ -72,18 +41,13 @@ class Factory {
 						expression.push_back(value);
 				//		cout << value << " ";
 						value = "";
-                               		} 
-					else if(operation == '+' || operation == '-' || operation == '/' || operation == '*') {
-                                        	expression.push_back(value);
-                                        	value = operation;
-				//		cout << value;
-					//	cout << "operation: " << value << endl;
-					//	if (operation == '*' && operationPow == '*') {
-					//		value += "*";
-					//		cout << "updated operator: " << value << endl;
-					//	}
-                                       		expression.push_back(value);
-                                        	value = "";
+					}
+					else if(operation == '+' || operation == '*' || operation == '/' || operation == '-') {
+						expression.push_back(value);
+						value = operation;
+						cout << value << endl;
+           					expression.push_back(value);
+            					value = "";
 					}
 					
                                 }					
@@ -91,20 +55,52 @@ class Factory {
 			return expression;
 		}
 
+		void Resize(vector<string>& expression) {
+			size_t k = 0; 
+			for (size_t i = 0; i < expression.size(); i++) {
+				if(expression.at(i) != "") {
+					expression.at(k) = expression.at(i);
+					k++;
+				}	
+			}
+			expression.resize(k);
+		}
+
+		bool check(vector<string> dirty) {
+			if (dirty.size() == 0) {
+                         //       cout << "Vector Empty" << endl;
+                                return true;
+                        }
+                        if (dirty.at(0) == "+" || dirty.at(0) == "-" || dirty.at(0) == "*" || dirty.at(0) == "**" || dirty.at(0) == "/") {
+                        //        cout << "Invalid Input" << endl;
+                                return true;
+                        }
+                        if (dirty.at(dirty.size()-1) == "+" || dirty.at(dirty.size()-1) == "-" || dirty.at(dirty.size()-1) == "*" || dirty.at(dirty.size()-1) == "**" || dirty.at(dirty.size()-1) == "/") {
+                               // cout << "Invalid Input" << endl;
+                                return true;
+                        }
+			return false;
+		}
+	
 		Base* parse(char** input, int length) {
 			vector<string> expression = ParseHelper(input, length);
 			Resize(expression);
-			Base* product = nullptr;
-			if(check(expression) == true){
-			return nullptr;
-                        }
-//			for(int i = 0; i < expression.size(); ++i) {
-//				cout << expression.at(i) << " ";
-//			}
-	
+			if(check(expression) == true) {
+				return nullptr;
+			}		
 
+			Base* product = nullptr;
+
+			//print expression
+			cout << "{";
+			for(int i = 0; i < expression.size(); ++i) {
+				cout <<  expression.at(i) << ",";
+			}
+			cout << "}" << endl;
+			
 			for(int i = 0; i < expression.size(); ++i) {
 				if(expression.at(i) == "+") {
+					cout << expression.at(i-1);
 					double val1 = stod(expression.at(i-1));
 					if(product != nullptr){
 					val1 = product->evaluate();
@@ -119,8 +115,6 @@ class Factory {
                                         Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
                                         product = new Add(op1, op2);
-	//				delete op1, op2;
-					}
 				}
 				else if(expression.at(i) == "-") {
 					double val1 = stod(expression.at(i-1));
@@ -139,11 +133,6 @@ class Factory {
                                         }
                                 }
 				else if(expression.at(i) == "/") {
-/*                                        double val1 = stod(expression.at(i-1));
-                                        double val2 = stod(expression.at(i+1));
-                                        Base* op1 = new Op(val1);
-                                        Base* op2 = new Op(val2);
-                                        product = new Div(op1, op2); */
 					double val1 = stod(expression.at(i-1));
                                         if(product != nullptr){
                                         val1 = product->evaluate();
@@ -160,11 +149,6 @@ class Factory {
                                         }
                                 }
 				else if(expression.at(i) == "**") {
-/*                                      	double val1 = stod(expression.at(i-1));
-                                        double val2 = stod(expression.at(i+1));
-                                 	Base* op1 = new Op(val1);
-                                        Base* op2 = new Op(val2);
-					product = new Pow(op1, op2); */
 					double val1 = stod(expression.at(i-1));
                                         if(product != nullptr){
                                         val1 = product->evaluate();
@@ -181,11 +165,6 @@ class Factory {
                                         }
 				}
 				else if(expression.at(i) == "*") {
-/*                       	                double val1 = stod(expression.at(i-1));
-                               	        double val2 = stod(expression.at(i+1));
-                                        Base* op1 = new Op(val1);
-                                  	Base* op2 = new Op(val2);
-                                        product = new Mult(op1, op2); */
 					double val1 = stod(expression.at(i-1));
                                         if(product != nullptr){
                                         val1 = product->evaluate();
@@ -200,14 +179,11 @@ class Factory {
                                         Base* op2 = new Op(val2);
                                         product = new Mult(op1, op2);
                                         }
-				}	
-			}		
-			
-			return product;		
-		}
-	
-		
+				} 	
+			}
 
+			return product;		
+	}
 };
 
 #endif 
