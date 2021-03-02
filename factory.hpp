@@ -15,13 +15,8 @@
 using namespace std;
 
 class Factory {
-	private: 
-//		Base* product = nullptr;
-
 	public: 
-		~Factory() { 
-//			delete product;
-		}
+		~Factory() {}
 
 		vector<string> ParseHelper(char** input, int length) {
 			vector<string> expression;
@@ -30,21 +25,21 @@ class Factory {
 			for (unsigned i = 1; i < length; i++) {
 				char* digit = input[i];
  				if(isdigit(*digit) == true) {
+
 					value += input[i];
-					cout << value << endl;
+				//	cout << value << " ";
 					if(i == length-1) {
 						expression.push_back(value);
 					}
 					first = false;
 				}
-				else {
+				else {		
 					char operation = *input[i];
-
 					if(strlen(input[i]) > 1) {
 						expression.push_back(value);
 						value = input[i];
 						expression.push_back(value);
-						cout << value << endl;
+				//		cout << value << " ";
 						value = "";
 					}
 					else if(operation == '+' || operation == '*' || operation == '/' || operation == '-') {
@@ -54,6 +49,7 @@ class Factory {
            					expression.push_back(value);
             					value = "";
 					}
+					
                                 }					
 			}
 			return expression;
@@ -102,7 +98,6 @@ class Factory {
 			}
 			cout << "}" << endl;
 			
-			
 			for(int i = 0; i < expression.size(); ++i) {
 				if(expression.at(i) == "+") {
 					cout << expression.at(i-1);
@@ -112,6 +107,7 @@ class Factory {
 					double val2 = stod(expression.at(i+1));
 					Base* op1 = new Op(val1);
 					Base* op2 = new Op(val2);
+	//				delete op1, op2;
 					product = new Add(op1, op2);
 					}
 					else {
@@ -119,7 +115,6 @@ class Factory {
                                         Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
                                         product = new Add(op1, op2);
-	}
 				}
 				else if(expression.at(i) == "-") {
 					double val1 = stod(expression.at(i-1));
