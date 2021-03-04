@@ -115,6 +115,7 @@ class Factory {
                                         Base* op1 = new Op(val1);
                                         Base* op2 = new Op(val2);
                                         product = new Add(op1, op2);
+					}
 				}
 				else if(expression.at(i) == "-") {
 					double val1 = stod(expression.at(i-1));
